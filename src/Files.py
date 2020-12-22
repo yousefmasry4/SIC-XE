@@ -9,3 +9,6 @@ class File:
         f = open(self.path, "w")
         f.write("\n".join(data_list) if data_str == None else data_str)
         f.close()
+    @staticmethod
+    def split_line(line:str):
+        return(line.split(" "))

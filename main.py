@@ -1,8 +1,17 @@
 from src.Files import File
+import argparse
+import os
 
-f=File("Files\inSICXE.txt")
-data=f.read(start_ign=['.'])
-print(f.read(start_ign=['.'])[1])
-new_f=File("Files\\test.txt")
-new_f.write(data_str="hte\nhello")
+class Main():
+    def __init__(self):
+        pass
 
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input', nargs=1)
+    args = parser.parse_args()
+    print(args.input[0])
+    Main()
