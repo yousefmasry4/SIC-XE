@@ -1,5 +1,4 @@
-COPY    START 0
-
+COPY     START 0
 .hello World
 FIRST STL RETADR 
 LDB #LENGTH

@@ -2,11 +2,12 @@ class Number:
     def __init__(self,operand):
         self.operand=operand
     
-    def hex(self):#int to hex
-        return hex(self.operand)
+    def hex(self,size=0):#int to hex
+        self.operand=hex(self.operand)
+        return self.operand if size == 0 else self.hex_size(size=size)
     
     def int(self):#int to hex
-        if self.operand[1] == "x" and self.operand[0] == "0":
+        if  "x" in self.operand:
             return int(self.operand, 0)
         else:
             return int(self.operand, 16)
@@ -22,7 +23,7 @@ class Number:
             return False
 
     def hex_size(self,size=5):
-        if self.operand[1] == "x" and self.operand[0] == "0":
+        if  "x" in self.operand:
             self.operand=self.operand[2:]
             return "0x"+"0"*(0 if size - len(self.operand) <= 0 else size - len(self.operand))+self.operand
         else:

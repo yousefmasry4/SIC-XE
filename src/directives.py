@@ -1,22 +1,22 @@
-from number import Number
-from models.Lines import Line as l
+from .number import Number
+from .models.Lines import Line as l
 class Directives:
     def __init__(self):
         pass
     def handel(self,main,line,part):
-        if(str(part).upper) == "START":
+        if(str(part).upper()) == "START":
             self.start(main,line)
 
 
     def start(self,main,line):
-        
+        print(line)
         if "START" == line[0].upper():
             raise Exception(f"LINE[{main.lineno}]\tthe name of prog can't to set as START")
         elif "START" == line[2].upper():
             raise Exception(f"LINE[{main.lineno}]\tFalse START position")
         elif len(line[0]) > 6:
             raise Exception(f"LINE[{main.lineno}]\tname is more than 6 chars")
-        elif Number(line[2]).test_hex == False:
+        elif Number(line[2]).test_hex() == False:
             raise Exception(f"LINE[{main.lineno}]\t starting address must to be hex")
         else:
                 main.start_addr=Number(line[2]).hex_size(size=6)
@@ -30,5 +30,6 @@ class Directives:
                         True
                     )
                 )
-                main.current_loc = Number(Number(main.current_loc).int()+4).hex()
+                main.current_loc = Number(Number(main.current_loc).int()+4).hex(size=6)
+                print( main.current_loc)
 

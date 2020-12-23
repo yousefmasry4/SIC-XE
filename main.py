@@ -33,12 +33,14 @@ class Main():
             parts=File.split_line(l)
             flag= True
             for part in parts:
-                if str(part).upper in DIRTAB:
+                if str(part).upper() in DIRTAB:
+
                     flag == False
-                    self.DIR_H.handel(self,l,str(part).upper())
+                    self.DIR_H.handel(self,parts,str(part).upper())
                     break
             if flag:
                 pass
+            exit(0)
 
 
 
@@ -49,8 +51,6 @@ if __name__ == "__main__":
     parser.add_argument('input', nargs=1)
     args = parser.parse_args()
     print(f"compiling   {args.input[0]}")
-    try:
-        prog=Main(args.input[0])
-        prog.pass1()
-    except:
-        print("error")
+    
+    prog=Main(args.input[0])
+    prog.pass1()

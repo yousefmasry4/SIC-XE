@@ -1,5 +1,5 @@
 from src.Files import File
-from Instruction import instruction as inst
+from .Instruction import instruction as inst
 class Line:
     def __init__(self,instruction,noL,location,asm=False):
         self.instruction_list=instruction
