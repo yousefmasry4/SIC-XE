@@ -1,9 +1,9 @@
 from src.Files import File
 from .Instruction import instruction as inst
 class Line:
-    def __init__(self,instruction,noL,location,asm=False):
+    def __init__(self,instruction,noL,location,instr=None,asm=False):
         self.instruction_list=instruction
-        self.instruction=None
+        self.instruction=instr
         if not asm:
             self.instruction=inst(self.instruction_list)
         else:

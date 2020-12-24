@@ -23,10 +23,11 @@ class Main():
         self.current_loc=None
         self.lineno = 0
         self.littab = {}
+        self.symtab={}
         self.endlitpool = []
         self.Lines = []
         self.base = None
-        self.DIR_H=Directives()   
+        self.DIR_H=Directives(self)   
     def pass1(self):
         for l in self.programe:
             self.lineno +=1
@@ -34,9 +35,8 @@ class Main():
             flag= True
             for part in parts:
                 if str(part).upper() in DIRTAB:
-
                     flag == False
-                    self.DIR_H.handel(self,parts,str(part).upper())
+                    self.DIR_H.handel(parts,str(part).upper())
                     break
             if flag:
                 pass
