@@ -1,11 +1,20 @@
 from .number import Number
 from .models.Lines import Line as l
 from math import ceil
+import string
 class Directives:
     def __init__(self,main):
         self.main=main
         self.linef=lambda c,size : Number(Number(self.main.current_loc).int()+c).hex(size=size)
     
+    @staticmethod
+    def operand_pre(op):
+        if(op[0].upper()  not in string.ascii_uppercase):
+            if(op[0] not in ["@","#"]):
+                return op[0],op[1:]
+        else:
+            return None,op
+
     def handel(self,line,part):
         if(str(part).upper()) == "START":
             self.start(line)
@@ -30,16 +39,20 @@ class Directives:
         elif  [i.upper() for i in line].count("BASE") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] BASE position")
         elif line[1].upper() not in self.main.symtab:
-            raise Exception(f"LINE[{ self.main.lineno}]\t {line[1]} not found")      
+            print(line)
+            self.main.symtab[line[1].upper()]=None
         else:
             self.main.base= self.main.symtab[line[1].upper()]
+            toa,top=Directives.operand_pre(line[1])
             self.main.Lines.append(
                 l(
                     line,
                     self.main.lineno,
                     None,
                     "BASE",
-                    True
+                    True,
+                    pre=toa,
+                    ref=top
                 )
             )
 
@@ -53,7 +66,8 @@ class Directives:
         elif  [i.upper() for i in line].count("RESW") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] RESW position")
         elif line[0].upper() in self.main.symtab:
-            raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
+            if(self.main.symtab[line[0].upper()]!=None):
+                raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
         else:
             #nshof hya c walla x
             temp=line[2]
@@ -85,7 +99,7 @@ class Directives:
                         )
                     )
                     self.main.current_loc = self.linef(Number(temp[2:-1]).int()*3,6)
-            elif not Number(temp).test_hex: #int
+            elif Number(temp).is_int():#int
                     self.main.Lines.append(
                         l(
                             line,
@@ -95,9 +109,10 @@ class Directives:
                             True
                         )
                     )
-                    self.main.current_loc = self.linef(int(temp[2:-1])*3,6)               
+                    self.main.current_loc = self.linef(int(temp)*3,6)               
             else:
-                raise Exception(f"LINE[{ self.main.lineno}]\tformate {temp[0]} is undefined")    
+                print(Number(temp).test_hex())
+                raise Exception(f"LINE[{ self.main.lineno}]\tformate {type(temp[0])} is undefined")    
 
 
     def RESB(self,line):
@@ -108,7 +123,8 @@ class Directives:
         elif  [i.upper() for i in line].count("RESB") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] RESB position")
         elif line[0].upper() in self.main.symtab:
-            raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
+            if(self.main.symtab[line[0].upper()]!=None):
+                raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
         else:
             #nshof hya c walla x
             temp=line[2]
@@ -140,7 +156,7 @@ class Directives:
                         )
                     )
                     self.main.current_loc = self.linef(Number(temp[2:-1]).int(),6)
-            elif not Number(temp).test_hex: #int
+            elif Number(temp).is_int():#int
                     self.main.Lines.append(
                         l(
                             line,
@@ -150,7 +166,7 @@ class Directives:
                             True
                         )
                     )
-                    self.main.current_loc = self.linef(int(temp[2:-1]),6)               
+                    self.main.current_loc = self.linef(int(temp),6)               
             else:
                 raise Exception(f"LINE[{ self.main.lineno}]\tformate {temp[0]} is undefined")    
 
@@ -164,7 +180,8 @@ class Directives:
         elif  [i.upper() for i in line].count("WORD") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] WORD position")
         elif line[0].upper() in self.main.symtab:
-            raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
+            if(self.main.symtab[line[0].upper()]!=None):
+                raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
         else:
             #nshof hya c walla x
             temp=line[2]
@@ -196,7 +213,7 @@ class Directives:
                         )
                     )
                     self.main.current_loc = self.linef(3,6)
-            elif not Number(temp).test_hex: #int
+            elif Number(temp).is_int():#int
                     self.main.Lines.append(
                         l(
                             line,
@@ -218,7 +235,9 @@ class Directives:
         elif  [i.upper() for i in line].count("BYTE") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] BYTE position")
         elif line[0].upper() in self.main.symtab:
-            raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")
+            if(self.main.symtab[line[0].upper()]!=None):
+                print(line[0].upper(),self.main.symtab[line[0].upper()])
+                raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")
         else:
             #nshof hya c walla x
             temp=line[2]
@@ -250,7 +269,7 @@ class Directives:
                         )
                     )
                     self.main.current_loc = self.linef(ceil(len(temp[2:-1])/2),6)
-            elif not Number(temp).test_hex: #int
+            elif Number(temp).is_int():#int
                     self.main.Lines.append(
                         l(
                             line,
@@ -269,7 +288,8 @@ class Directives:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse END position")
         elif line[1] == "END":
             raise Exception(f"LINE[{ self.main.lineno}]\tthe name of END pointer can't to set as END")
-        elif self.main.symtab[line[1].upper()] != self.main.start_addr or Number(self.main.start_addr).hex_size(6) !=  Number(line[1]).hex_size(6):
+        elif (self.main.symtab[line[1].upper()]!= self.main.start_addr ):
+            print(self.main.symtab[line[1].upper()])
             raise Exception(f"LINE[{ self.main.lineno}]\t wrong value")     
         else:
              self.main.Lines.append(
@@ -293,7 +313,7 @@ class Directives:
         elif Number(line[2]).test_hex() == False:
             raise Exception(f"LINE[{self.main.lineno}]\t starting address must to be hex")
         else:
-                self.main.start_addr=Number(line[2]).hex_size(size=6)
+                self.main.start_addr=Number("0x"+line[2]).hex_size(size=6)
                 self.main.current_loc=self.main.start_addr
                 self.main.name=line[0]
 
@@ -309,5 +329,5 @@ class Directives:
                         label=line[0]
                     )
                 )
-                self.main.current_loc = self.linef(4,6)
+                self.main.current_loc = self.linef(0,6)
 

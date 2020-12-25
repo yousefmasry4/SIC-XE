@@ -33,7 +33,7 @@ class Main():
     def pass1(self):
         for l in self.programe:
             self.lineno +=1
-            print(self.lineno)
+         #   print(self.lineno)
             parts=File.split_line(l)
             flag= True
             for part in parts:
@@ -51,13 +51,23 @@ class Main():
                         self.current_loc,
                         instr=None,
                     )
+                if(temp.ref != None):
+                #    print(str(temp))
+                    if( temp.ref.upper() not in self.symtab):
+                        self.symtab[temp.ref.upper()]=None
+                #    print(temp.label.upper(), self.symtab[temp.label.upper()])
+                #    exit(0)
+
                 self.Lines.append(temp)
                 print(str(self.Lines[-1]))
                 self.current_loc= Number(Number(self.current_loc).int()+temp.formate).hex(size=6)
-           
-        File.write("Files\Location Counter.txt",
-        data_list=[str(i)+"\n" for i in self.Lines]
-        )
+            if(self.Lines[-1].label != None ):
+                self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
+        for i in self.symtab.items():
+            print(i)
+            if(i[1] == None):
+                raise Exception(f"var [{i[0]}]\tis not defined")
+        File("/media/youssef/media/SIC XE/Files/Lc.txt").write(data_list=[str(i)+"\n" for i in self.Lines])
 
 
 

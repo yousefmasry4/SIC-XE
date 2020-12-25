@@ -31,4 +31,11 @@ class Number:
     def chars_to_hex(self):
         return "".join([ "%2X"%x for x in self.operand.encode()])
 
+    def is_int(self):
+        try: 
+            int(self.operand)
+            return True
+        except ValueError:
+            return False
+
     
