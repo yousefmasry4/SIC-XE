@@ -5,16 +5,23 @@ class instruction: #to get type and opcode
         self.opcode=None
         self.asm=True
         self.formate=None
+        self.ref=None
+        self.label=None
         if len(line ) == 1:
             self.asm=False
-            pass #todo zbtha
+            self.instruct=str(line[0]).upper()
         else:
+            #TODO make error
             if len(line ) == 2:
                 self.instruct=str(line[0]).upper()
+                self.ref=line[1]
             else:
                 self.instruct=str(line[1]).upper()
-            self.type()
-            self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]] << ((self.formate - 1) * 8)
+                self.ref=line[2]
+                self.label=line[0]
+        self.type()
+        print(OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0])
+        self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0] << ((self.formate - 1) * 8)
 
 
     def type(self):

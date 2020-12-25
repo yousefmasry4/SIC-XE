@@ -269,9 +269,8 @@ class Directives:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse END position")
         elif line[1] == "END":
             raise Exception(f"LINE[{ self.main.lineno}]\tthe name of END pointer can't to set as END")
-        
-        #TODO nshof el location dah sa7 bel vars aw 3ady walla la
-
+        elif self.main.symtab[line[1].upper()] != self.main.start_addr or Number(self.main.start_addr).hex_size(6) !=  Number(line[1]).hex_size(6):
+            raise Exception(f"LINE[{ self.main.lineno}]\t wrong value")     
         else:
              self.main.Lines.append(
                 l(
@@ -297,13 +296,17 @@ class Directives:
                 self.main.start_addr=Number(line[2]).hex_size(size=6)
                 self.main.current_loc=self.main.start_addr
                 self.main.name=line[0]
+
                 self.main.Lines.append(
                     l(
                         line,
                         self.main.lineno,
                         None,
                         "START",
-                        True
+                        asm=True,
+                        formate=3,
+                        ref=line[2],
+                        label=line[0]
                     )
                 )
                 self.main.current_loc = self.linef(4,6)

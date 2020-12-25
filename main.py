@@ -1,3 +1,5 @@
+from src.number import Number
+from src.models.Lines import Line
 from src.Files import File
 from src.directives import Directives 
 import argparse
@@ -31,16 +33,31 @@ class Main():
     def pass1(self):
         for l in self.programe:
             self.lineno +=1
+            print(self.lineno)
             parts=File.split_line(l)
             flag= True
             for part in parts:
+
                 if str(part).upper() in DIRTAB:
-                    flag == False
+
+                    flag = False
                     self.DIR_H.handel(parts,str(part).upper())
+                    print(str(self.Lines[-1]))
                     break
             if flag:
-                pass
-            exit(0)
+                temp=Line(
+                        parts,
+                        self.lineno,
+                        self.current_loc,
+                        instr=None,
+                    )
+                self.Lines.append(temp)
+                print(str(self.Lines[-1]))
+                self.current_loc= Number(Number(self.current_loc).int()+temp.formate).hex(size=6)
+           
+        File.write("Files\Location Counter.txt",
+        data_list=[str(i)+"\n" for i in self.Lines]
+        )
 
 
 
