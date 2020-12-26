@@ -3,7 +3,7 @@ from src.Files import File
 import string
 from .Instruction import instruction as inst
 class Line:
-    def __init__(self,instruction,noL,location,instr=None,asm=False,label=None,ref=None,object_code=None,inst_object=None,formate=None,have_x=False,pre=None):
+    def __init__(self,instruction,noL,location,instr=None,asm=False,label=None,ref=None,object_code=None,inst_object=None,formate=None,have_x=False,pre=None,stm_type="R"):
         
         
         self.instruction_list=instruction

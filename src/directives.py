@@ -24,7 +24,60 @@ class Directives:
             self.BASE(line)
         elif(str(part).upper()) == "RESB":
             self.RESB(line)
+        elif(str(part).upper()) == "EQU":
+            self.EQU(line)
 
+    def EQU(self, line):
+        if "EQU" != line[0].upper():
+            raise Exception(f"LINE[{ self.main.lineno}]\twrong EQU location")
+        elif len(line) > 2:
+            raise Exception(f"LINE[{ self.main.lineno}]\tWrong EQU formate")
+        elif [i.upper() for i in line].count("EQU") > 1:
+            raise Exception(
+                f"LINE[{ self.main.lineno}]\tFalse [Multiple] EQU position")
+        elif line[0].upper() in self.main.symtab and self.main.symtab[line[0].upper()] != None:
+            raise Exception(
+                f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")
+        else:
+            if line[2] == "*":
+                self.main.symtab[line[0]] = self.main.current_loc
+                self.main.Lines.append(
+                    l(
+                        line,
+                        self.main.lineno,
+                        self.main.current_loc,
+                        "EQU",
+                        True,
+                        ref=line[2],
+                        label=line[0]
+                    )
+                )
+            else:#equation
+                eq=line[2]
+                list_eq=eq.replace("-","+").split("+")
+                try:
+                    a, b = self.main.symtab[list_eq[0]], self.main.symtab[list_eq[1]]
+                    ans = Number(Number(a).int() + (Number(b).int()
+                                             if "+" in eq.split("") else Number(b).int()*-1)).hex(size=6)
+
+                    self.main.symtab[line[0]]=ans
+                    self.main.Lines.append(
+                        l(
+                            line,
+                            self.main.lineno,
+                            ans,
+                            "EQU",
+                            True,
+                            ref=line[2],
+                            stm_type="A",
+                            label=line[0]
+                        )
+                    )
+                    self.main.sTypeA.append(line[0])
+                    
+                except:
+                    raise Exception(
+                        f"LINE[{ self.main.lineno}]\t bad vars {eq}")                   
 
     def BASE(self,line):
         if "BASE" != line[0].upper():
@@ -36,7 +89,7 @@ class Directives:
         else:
             if line[1].upper() not in self.main.symtab:
                 self.main.symtab[line[1].upper()]=None
-            print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+           # print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
             self.main.base= self.main.symtab[line[1].upper()]
             self.main.Lines.append(
                 l(
@@ -117,8 +170,8 @@ class Directives:
 
 
     def RESB(self,line):
-        print(
-            "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+   #     print(
+    #        "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         if "RESB" == line[0].upper():
             raise Exception(f"LINE[{ self.main.lineno}]\tthe name of LABEL can't to set as RESB")
         elif len(line) > 3:
@@ -128,9 +181,9 @@ class Directives:
         elif line[0].upper() in self.main.symtab and (self.main.symtab[line[0].upper()]!=None):
             raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
         else:
-            print(
-                "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-            print(line)
+  #          print(
+ #               "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    #        print(line)
             #nshof hya c walla x
             temp=line[2]
             self.main.symtab[line[0].upper()]=self.main.current_loc
@@ -253,7 +306,7 @@ class Directives:
         elif  [i.upper() for i in line].count("BYTE") > 1:
             raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] BYTE position")
         elif line[0].upper() in self.main.symtab and (self.main.symtab[line[0].upper()]!=None):
-                print(line[0].upper(),self.main.symtab[line[0].upper()])
+    #            print(line[0].upper(),self.main.symtab[line[0].upper()])
                 raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")
         else:
             #nshof hya c walla x
@@ -312,7 +365,7 @@ class Directives:
         elif line[1] == "END":
             raise Exception(f"LINE[{ self.main.lineno}]\tthe name of END pointer can't to set as END")
         elif (self.main.symtab[line[1].upper()]!= self.main.start_addr ):
-            print(self.main.symtab[line[1].upper()])
+     #       print(self.main.symtab[line[1].upper()])
             raise Exception(f"LINE[{ self.main.lineno}]\t wrong value")     
         else:
              self.main.Lines.append(

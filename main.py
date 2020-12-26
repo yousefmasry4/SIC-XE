@@ -29,7 +29,8 @@ class Main():
         self.endlitpool = []
         self.Lines = []
         self.base = None
-        self.DIR_H=Directives(self)   
+        self.DIR_H=Directives(self)
+        self.sTypeA=[]
     def pass1(self):
         print(self.programe)
         for l in self.programe:
@@ -65,7 +66,8 @@ class Main():
                     self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
         symb=""
         for i in self.symtab.items():
-            symb +="%-6s  |"%(i[0])+"\t%-6s\n"%(i[1].upper()[2:])
+            symb += "%-6s  |" % (i[0])+"%s|" % ("R" if i[0] not in self.sTypeA else "A") + \
+                "\t%-6s\n" % (i[1].upper()[2:])
             if(i[1] == None):
                 raise Exception(f"var [{i[0]}]\tis not defined")
        

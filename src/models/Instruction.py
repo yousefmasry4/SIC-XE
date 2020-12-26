@@ -19,10 +19,13 @@ class instruction: #to get type and opcode
                 self.instruct=str(line[1]).upper()
                 self.ref=line[2]
                 self.label=line[0]
-        self.type()
+        
      #   print(OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0])
-        self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0] << ((self.formate - 1) * 8)
-
+        try:
+            self.type()
+            self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0] << ((self.formate - 1) * 8)
+        except:
+            raise Exception(f"{self.instruct}\tis not defined")
 
     def type(self):
         if self.instruct[0] == '+':
