@@ -36,7 +36,7 @@ class Main():
         self.DIR_H=Directives(self)
         self.sTypeA=[]
     def pass1(self):
-        print(self.programe)
+     #   print(self.programe)
         for l in self.programe:
             self.lineno +=1
          #   print(self.lineno)
@@ -68,11 +68,10 @@ class Main():
                 self.current_loc= Number(Number(self.current_loc).int()+temp.formate).hex(size=6)
                 if(self.Lines[-1].label != None ):
                     self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
-            temp=self.Lines[-1].ref
+            temp=self.Lines[-1]
             if temp != None :
-                if temp[0] == '=':
-                    self.Lines[-1].ref=temp[1:]
-                    self.Lines[-1].pre = "="
+            #    print("ssssssssssssssssssssssssssssssssssssssssssss",temp)
+                if temp.pre == '=':
                     LiteralTable(self,temp.ref)
         symb=""
         for i in self.symtab.items():
@@ -80,11 +79,18 @@ class Main():
                 "\t%-6s\n" % (i[1].upper()[2:])
             if(i[1] == None):
                 raise Exception(f"var [{i[0]}]\tis not defined")
-       
+
+
         print(symb)
+        print("**********************************************************")
+        for s in self.litpoolTable:
+            print(str(s))
+        print("**********************************************************")
         for s in self.Lines:
             print(str(s))
         File("/media/youssef/media/SIC XE/Files/symb.txt").write(data_str=symb)
+        File("/media/youssef/media/SIC XE/Files/litpoolTable.txt").write(
+            data_list=[str(i) for i in self.litpoolTable])
         File("/media/youssef/media/SIC XE/Files/Lc.txt").write(data_list=[str(i) for i in self.Lines])
 
 
@@ -95,7 +101,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input', nargs=1)
     args = parser.parse_args()
-    print(f"compiling   {args.input[0]}")
-    
-    prog=Main(args.input[0])
-    prog.pass1()
+    try:
+        print(f"compiling   {args.input[0]}")
+        prog=Main(args.input[0])
+        prog.pass1()
+    except Exception as e:
+        print(e)

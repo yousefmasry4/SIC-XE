@@ -29,6 +29,10 @@ class Directives:
             self.EQU(line)
         elif(str(part).upper()) == "LTORG":
             self.LTORG(line)
+        else:
+            self.RESW(line,size=6)
+
+
 
     def LTORG(self, line):
         if len(line) >1:
@@ -38,17 +42,20 @@ class Directives:
                 l(
                     line,
                     self.main.lineno,
-                    self.main.current_loc,
+                    None,
                     "LTORG",
                     True,
                     ref=None,
                     label=None
                 )
             )
+       #     print("dddddddddddddddddddddd")
             self.GOoRG()
 
     def GOoRG(self):
-        while(len(self.main.littab) != 0):
+     #   print("ssssssssssssssssssssssssssssssssssssssssssssssssssssss" +
+ #             str(len(self.main.litpool)))
+        while(len(self.main.litpool) != 0):
             self.main.lineno += 1
             t=LiteralTable.get(self.main, self.main.current_loc)
             self.main.Lines.append(
@@ -58,8 +65,8 @@ class Directives:
                     self.main.current_loc,
                     t.Name,
                     True,
-                    ref="*",
-                    label=None
+                    ref=t.value,
+                    label="*"
                 )
             )
             self.main.current_loc = self.linef(ceil(len(t.value)/2), 6)
@@ -141,7 +148,7 @@ class Directives:
             )
 
 
-    def RESW(self,line):
+    def RESW(self,line,size=3):
         if "RESW" == line[0].upper():
             raise Exception(f"LINE[{ self.main.lineno}]\tthe name of LABEL can't to set as RESW")
         elif len(line) > 3:
@@ -171,7 +178,7 @@ class Directives:
 
                     )
                 )
-                self.main.current_loc = self.linef(Number(hex).int()*3,6)
+                self.main.current_loc = self.linef(Number(hex).int()*size,6)
             elif temp[0].upper() == 'X':
                 if Number(temp[2:-1]).test_hex() == False:
                     raise Exception(f"LINE[{self.main.lineno}]\t starting address must to be hex")
@@ -187,7 +194,8 @@ class Directives:
                             label=line[0]
                         )
                     )
-                    self.main.current_loc = self.linef(Number(temp[2:-1]).int()*3,6)
+                    self.main.current_loc = self.linef(
+                        Number(temp[2:-1]).int()*size, 6)
             elif Number(temp).is_int():#int
                     self.main.Lines.append(
                         l(
@@ -200,7 +208,7 @@ class Directives:
                             label=line[0]
                         )
                     )
-                    self.main.current_loc = self.linef(int(temp)*3,6)               
+                    self.main.current_loc = self.linef(int(temp)*size, 6)
             else:
       #          print(Number(temp).test_hex())
                 raise Exception(f"LINE[{ self.main.lineno}]\tformate {type(temp[0])} is undefined")    

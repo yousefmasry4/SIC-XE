@@ -19,21 +19,21 @@ class instruction: #to get type and opcode
                 self.instruct=str(line[1]).upper()
                 self.ref=line[2]
                 self.label=line[0]
-        
+             #   print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",self.ref)
      #   print(OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0])
-        try:
-            self.type()
-            self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0] << ((self.formate - 1) * 8)
-        except:
-            raise Exception(f"{self.instruct}\tis not defined")
+        self.type()
+
 
     def type(self):
         if self.instruct[0] == '+':
             self.formate=4
         elif self.instruct[0] == '$':
             self.formate=5
-        else:
+        elif self.instruct in OPTAB:
             self.formate=OPTAB[self.instruct][1]
+        else:
+            raise Exception(f"{self.instruct}\tis not defined")
+
 
     def __str__(self):
         return f"{bin(self.opcode)}  :   {self.formate}"
@@ -110,4 +110,4 @@ OPTAB = {
     "WD"     : (0xDC, 3)
 }
 
-print(OPTAB["ADD"])
+#print(OPTAB["ADD"])

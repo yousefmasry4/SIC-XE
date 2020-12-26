@@ -25,7 +25,9 @@ class Line:
             self.instruction=temp.instruct
             self.label=   temp.label
      #       print(temp.ref)
-            self.pre,self.ref=self.operand_pre(temp.ref)
+            if(temp.ref != None):
+                self.pre,self.ref=self.operand_pre(temp.ref)
+                
             
         else:
             #TODO pass2 zbt el opcode w el 7gat dy
@@ -33,11 +35,12 @@ class Line:
                 self.pre,self.ref=self.operand_pre(self.ref)
 
     def operand_pre(self,op):
+      #  print(op)
         if(op == None):
             return None,None
         if not (op[0].upper().isalpha() or Number(op[0]).is_int()):
       #      print("wwwwwwwwwww")
-            if(op[0] ==  "@" or op[0] == "#"):
+            if(op[0] == "@" or op[0] == "#" or op[0] == "="):
    #             print("ss")
                 return op[0],op[1:]
             else:
