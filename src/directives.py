@@ -1,6 +1,7 @@
 from .number import Number
 from .models.Lines import Line as l
 from math import ceil
+from src.models.literalTable import LiteralTable
 import string
 class Directives:
     def __init__(self,main):
@@ -26,11 +27,47 @@ class Directives:
             self.RESB(line)
         elif(str(part).upper()) == "EQU":
             self.EQU(line)
+        elif(str(part).upper()) == "LTORG":
+            self.LTORG(line)
+
+    def LTORG(self, line):
+        if len(line) >1:
+            raise Exception(f"LINE[{ self.main.lineno}]\tWrong LTORG formate")
+        else:
+            self.main.Lines.append(
+                l(
+                    line,
+                    self.main.lineno,
+                    self.main.current_loc,
+                    "LTORG",
+                    True,
+                    ref=None,
+                    label=None
+                )
+            )
+            self.GOoRG()
+
+    def GOoRG(self):
+        while(len(self.main.littab) != 0):
+            self.main.lineno += 1
+            t=LiteralTable.get(self.main, self.main.current_loc)
+            self.main.Lines.append(
+                l(
+                    ["*",t.Name],
+                    self.main.lineno,
+                    self.main.current_loc,
+                    t.Name,
+                    True,
+                    ref="*",
+                    label=None
+                )
+            )
+            self.main.current_loc = self.linef(ceil(len(t.value)/2), 6)
 
     def EQU(self, line):
-        if "EQU" != line[0].upper():
+        if "EQU" != line[1].upper():
             raise Exception(f"LINE[{ self.main.lineno}]\twrong EQU location")
-        elif len(line) > 2:
+        elif len(line) !=3:
             raise Exception(f"LINE[{ self.main.lineno}]\tWrong EQU formate")
         elif [i.upper() for i in line].count("EQU") > 1:
             raise Exception(
@@ -45,7 +82,7 @@ class Directives:
                     l(
                         line,
                         self.main.lineno,
-                        self.main.current_loc,
+                        None,
                         "EQU",
                         True,
                         ref=line[2],
@@ -56,16 +93,17 @@ class Directives:
                 eq=line[2]
                 list_eq=eq.replace("-","+").split("+")
                 try:
-                    a, b = self.main.symtab[list_eq[0]], self.main.symtab[list_eq[1]]
+                    a, b = self.main.symtab[list_eq[0]
+                                            ], self.main.symtab[list_eq[1]]
                     ans = Number(Number(a).int() + (Number(b).int()
-                                             if "+" in eq.split("") else Number(b).int()*-1)).hex(size=6)
+                                                    if "+" in eq else Number(b).int()*-1)).hex(size=6)
 
-                    self.main.symtab[line[0]]=ans
+                    self.main.symtab[line[0]] = ans
                     self.main.Lines.append(
                         l(
                             line,
                             self.main.lineno,
-                            ans,
+                            None,
                             "EQU",
                             True,
                             ref=line[2],
@@ -74,7 +112,7 @@ class Directives:
                         )
                     )
                     self.main.sTypeA.append(line[0])
-                    
+                        
                 except:
                     raise Exception(
                         f"LINE[{ self.main.lineno}]\t bad vars {eq}")                   
@@ -101,7 +139,6 @@ class Directives:
                     ref=line[1]
                 )
             )
-
 
 
     def RESW(self,line):
@@ -368,7 +405,7 @@ class Directives:
      #       print(self.main.symtab[line[1].upper()])
             raise Exception(f"LINE[{ self.main.lineno}]\t wrong value")     
         else:
-             self.main.Lines.append(
+            self.main.Lines.append(
                 l(
                     line,
                     self.main.lineno,
@@ -378,6 +415,9 @@ class Directives:
                     ref=line[1]
                 )
             )
+            self.GOoRG()
+
+
 
     def start(self,line):
     #    print(line)

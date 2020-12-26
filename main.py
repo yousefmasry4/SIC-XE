@@ -1,7 +1,9 @@
 from src.number import Number
 from src.models.Lines import Line
+from src.models.literalTable import LiteralTable
 from src.Files import File
 from src.directives import Directives 
+
 import argparse
 import os
 prog=None
@@ -14,7 +16,8 @@ DIRTAB = [
         "RESW"  ,
         "BASE"  ,
         "LTORG" ,
-        "EQU" 
+        "EQU" ,
+        "RESDW"
     ]
 class Main():
     def __init__(self,fn):
@@ -26,7 +29,8 @@ class Main():
         self.lineno = 0
         self.littab = {}
         self.symtab={}
-        self.endlitpool = []
+        self.litpool = []
+        self.litpoolTable = []
         self.Lines = []
         self.base = None
         self.DIR_H=Directives(self)
@@ -64,6 +68,12 @@ class Main():
                 self.current_loc= Number(Number(self.current_loc).int()+temp.formate).hex(size=6)
                 if(self.Lines[-1].label != None ):
                     self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
+            temp=self.Lines[-1].ref
+            if temp != None :
+                if temp[0] == '=':
+                    self.Lines[-1].ref=temp[1:]
+                    self.Lines[-1].pre = "="
+                    LiteralTable(self,temp.ref)
         symb=""
         for i in self.symtab.items():
             symb += "%-6s  |" % (i[0])+"%s|" % ("R" if i[0] not in self.sTypeA else "A") + \

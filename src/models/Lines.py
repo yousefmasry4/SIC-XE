@@ -29,9 +29,9 @@ class Line:
             
         else:
             #TODO pass2 zbt el opcode w el 7gat dy
+            if(self.instruction.upper() != "EQU" and self.instruction[0] != "="):
+                self.pre,self.ref=self.operand_pre(self.ref)
 
-            self.pre,self.ref=self.operand_pre(self.ref)
-            pass
     def operand_pre(self,op):
         if(op == None):
             return None,None
