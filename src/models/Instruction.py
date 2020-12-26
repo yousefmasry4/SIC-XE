@@ -20,7 +20,7 @@ class instruction: #to get type and opcode
                 self.ref=line[2]
                 self.label=line[0]
         self.type()
-        print(OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0])
+     #   print(OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0])
         self.opcode = OPTAB[self.instruct if self.formate != 4 else self.instruct[1:]][0] << ((self.formate - 1) * 8)
 
 

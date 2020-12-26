@@ -31,6 +31,7 @@ class Main():
         self.base = None
         self.DIR_H=Directives(self)   
     def pass1(self):
+        print(self.programe)
         for l in self.programe:
             self.lineno +=1
          #   print(self.lineno)
@@ -42,7 +43,6 @@ class Main():
 
                     flag = False
                     self.DIR_H.handel(parts,str(part).upper())
-                    print(str(self.Lines[-1]))
                     break
             if flag:
                 temp=Line(
@@ -51,23 +51,29 @@ class Main():
                         self.current_loc,
                         instr=None,
                     )
-                if(temp.ref != None):
+                if(temp.label != None):
                 #    print(str(temp))
-                    if( temp.ref.upper() not in self.symtab):
-                        self.symtab[temp.ref.upper()]=None
+                    if( temp.label.upper() not in self.symtab):
+                        self.symtab[temp.label.upper()]=None
                 #    print(temp.label.upper(), self.symtab[temp.label.upper()])
                 #    exit(0)
 
                 self.Lines.append(temp)
-                print(str(self.Lines[-1]))
+             #   print(str(self.Lines[-1]))
                 self.current_loc= Number(Number(self.current_loc).int()+temp.formate).hex(size=6)
-            if(self.Lines[-1].label != None ):
-                self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
+                if(self.Lines[-1].label != None ):
+                    self.symtab[self.Lines[-1].label.upper()]=self.Lines[-1].location
+        symb=""
         for i in self.symtab.items():
-            print(i)
+            symb +="%-6s  |"%(i[0])+"\t%-6s\n"%(i[1].upper()[2:])
             if(i[1] == None):
                 raise Exception(f"var [{i[0]}]\tis not defined")
-        File("/media/youssef/media/SIC XE/Files/Lc.txt").write(data_list=[str(i)+"\n" for i in self.Lines])
+       
+        print(symb)
+        for s in self.Lines:
+            print(str(s))
+        File("/media/youssef/media/SIC XE/Files/symb.txt").write(data_str=symb)
+        File("/media/youssef/media/SIC XE/Files/Lc.txt").write(data_list=[str(i) for i in self.Lines])
 
 
 

@@ -28,6 +28,8 @@ class Number:
             return "0x"+"0"*(0 if size - len(self.operand) <= 0 else size - len(self.operand))+self.operand
         else:
             return "0"*(0 if size - len(self.operand) <= 0 else size - len(self.operand))+self.operand
+
+            
     def chars_to_hex(self):
         return "".join([ "%2X"%x for x in self.operand.encode()])
 
