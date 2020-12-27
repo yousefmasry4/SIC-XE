@@ -36,7 +36,7 @@
 3 6 	 0 0 1 0 5 7       	 E X I T           	 S T X             	   L E N G T H       	
 3 7 	 0 0 1 0 5 A       	                   	 R S U B           	                     	
 3 8 	 0 0 1 0 5 D       	 I N P U T         	 B Y T E           	   X ’ F 1 ’         	
-3 9 	 0 0 1 0 5 E       	 j o               	 R E S W           	   1                 	
+3 9 	 0 0 1 0 5 E       	 j o               	 R E S D W         	   1                 	
 4 0 	 0 0 1 0 6 4       	 W R R E C         	 C L E A R         	   X                 	
 4 1 	 0 0 1 0 6 6       	                   	 L D T             	   L E N G T H       	
 4 2 	 0 0 1 0 6 9       	 W L O O P         	 T D               	 = X ’ 0 5 ’         	

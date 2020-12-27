@@ -149,12 +149,14 @@ class Directives:
 
 
     def RESW(self,line,size=3):
-        if "RESW" == line[0].upper():
-            raise Exception(f"LINE[{ self.main.lineno}]\tthe name of LABEL can't to set as RESW")
+        m="RESW" if size== 3 else "RESDW"
+
+        if m == line[0].upper():
+            raise Exception(f"LINE[{ self.main.lineno}]\tthe name of LABEL can't to set as {m}")
         elif len(line) > 3:
-            raise Exception(f"LINE[{ self.main.lineno}]\tWrong RESW formate")  
-        elif  [i.upper() for i in line].count("RESW") > 1:
-            raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] RESW position")
+            raise Exception(f"LINE[{ self.main.lineno}]\tWrong {m} formate")  
+        elif  [i.upper() for i in line].count(m) > 1:
+            raise Exception(f"LINE[{ self.main.lineno}]\tFalse [Multiple] {m} position")
         elif line[0].upper() in self.main.symtab and self.main.symtab[line[0].upper()] != None:
             raise Exception(f"LINE[{ self.main.lineno}]\tMULTI useing of label {line[0]}")      
         else:
@@ -171,7 +173,7 @@ class Directives:
                         line,
                         self.main.lineno,
                         self.main.current_loc,
-                        "RESW",
+                        m,
                         True,
                         ref=temp,
                         label=line[0]
@@ -188,7 +190,7 @@ class Directives:
                             line,
                             self.main.lineno,
                             self.main.current_loc,
-                            "RESW",
+                            m,
                             True,
                             ref=temp,
                             label=line[0]
@@ -202,7 +204,7 @@ class Directives:
                             line,
                             self.main.lineno,
                             self.main.current_loc,
-                            "RESW",
+                            m,
                             True,
                             ref=temp,
                             label=line[0]
