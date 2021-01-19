@@ -3,7 +3,7 @@ class LiteralTable:
     def __init__(self,main, Name, value=None,Address=None):
         self.Name, self.value, self.Address = Name, value, Address
         self.t=0
-
+        self.ref_to=None
         if self.Name not in [i.Name for i in main.litpool]:
             self.calc_value()
             main.litpool.append(self)
